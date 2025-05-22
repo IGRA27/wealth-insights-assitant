@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+
+  // Desactiva optimización de imágenes para evitar dependencia de sharp
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;
