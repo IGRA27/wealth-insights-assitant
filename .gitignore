@@ -1,0 +1,79 @@
+#Autor:Isaac Reyes
+#Entornos virtuales
+venv/
+.env
+__pycache__/
+
+#Compilaciones Python
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+#
+#FastAPI / RAG / LangChain
+#
+logs/
+instance/
+local_settings.py
+settings_local.py
+
+
+#Logs
+*.log
+#Variables de entorno frontend
+#
+#Frontend (React, Next.js, Vite)
+#
+node_modules/
+dist/
+build/
+out/
+.next/
+.vite/
+.env.local
+.env.development
+.env.production
+#VSCode settings
+.vscode/
+*.code-workspace
+#Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+#Archivos de sistema
+.DS_Store
+Thumbs.db
+
+#Docker y compose t venv
+*.env
+.env
+.env.*
+.venv/
+venv/
+ENV/
+env/
+docker-compose.override.yml
+.docker/
+#Node modules (si usas npm/yarn en frontend)
+node_modules/
+dist/
+build/
+
+#Pruebas
+coverage/
+htmlcov/
+*.cover
+
+#GitHub Actions / CI/CD (si es que alcanzo) y Jupyter
+# ========================================
+/.github/workflows/*.secret
+/.github/secrets/
+.ipynb_checkpoints
+*.ipynb
+#Otros
+results/
+outputs/
+tmp/
+temp/
