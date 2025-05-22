@@ -3,8 +3,8 @@ aqui construyo el agente LangChain con: Tool vector_db_search y Tool fx_rate
 """
 from langchain.agents import AgentExecutor, Tool, AgentType, initialize_agent
 from langchain.schema import SystemMessage
-from langchain_community.chat_models import ChatOpenAI
-from langchain_community.tools import StructuredTool
+from langchain_openai import ChatOpenAI
+from langchain.tools import StructuredTool
 
 from ..services.retriever import get_vectorstore
 from ..services.currency import eur_to_usd
@@ -23,14 +23,14 @@ def build_agent() -> AgentExecutor:
     )
 
     fx_tool = StructuredTool.from_function(
-        name="fx_rate_eur_usd",
-        description="Devuelve la tasa de cambio EUR→USD actual.",
-        func=lambda _: eur_to_usd(),
-    )
+    eur_to_usd,
+    name="eur_to_usd",
+    description="Obtiene la cotización actual EUR a USD."
+    )   
 
     llm = ChatOpenAI(
-        temperature=0,
-        model_name="gpt-3.5-turbo",
+        temperature=0.1,
+        model="gpt-4o",
         openai_api_key=settings.openai_api_key,
     )
 
