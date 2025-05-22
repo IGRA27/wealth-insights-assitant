@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wealth-insights-backend"
+version = "0.1.0"
+description = "RAG backend para Wealth Insights Assistant"
+requires-python = ">=3.11"
+dependencies = []         # lo gestionamos con requirements.txt
+
+[tool.setuptools.packages.find]
+where = ["app"]
