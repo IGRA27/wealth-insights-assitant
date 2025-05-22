@@ -14,11 +14,17 @@ class Settings(BaseSettings):
     #embd-llm
     embedding_model_name: str = "all-MiniLM-L6-v2"
     openai_api_key: str | None = None  
+    #cors:
+    cors_allowed_origins: list[str] = Field(
+        default=["http://localhost:3000"],  # dev por defecto
+        env="CORS_ALLOWED_ORIGINS",
+    )
     #externalapis
     fx_api_base: str = "https://api.exchangerate.host/latest"
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+    
 
 
 @lru_cache(maxsize=1)

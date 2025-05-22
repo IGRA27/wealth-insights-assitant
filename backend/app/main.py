@@ -12,12 +12,13 @@ app = FastAPI(
     openapi_url="/openapi.json",
 )
 
-#CORS abierta para la demo
+#CORS para prod
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=settings.cors_allowed_origins,
+    allow_methods=["POST", "GET"],
+    allow_headers=["Authorization", "Content-Type"],
+    allow_credentials=False,   #True seria para enviar cookie
 )
 
 app.include_router(v1_router)
