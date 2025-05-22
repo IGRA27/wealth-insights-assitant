@@ -10,8 +10,9 @@ class Settings(BaseSettings):
     project_name: str = "Wealth Insights Assistant"
     api_version: str = "v1"
     #paths
-    data_path: Path = Field(default=Path(__file__).resolve().parent.parent.parent / "data" / "samples")
-    index_path: Path = Field(default=Path(__file__).resolve().parent.parent.parent / "data" / "faiss.index")
+    _REPO_ROOT = Path(__file__).resolve().parents[3]
+    data_path:  Path = Field(default=_REPO_ROOT / "data" / "samples")
+    index_path: Path = Field(default=_REPO_ROOT / "data" / "faiss.index")
     #embd-llm
     embedding_model_name: str = "all-MiniLM-L6-v2"
     openai_api_key: str | None = None  

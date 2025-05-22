@@ -1,33 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Proxy que redirige la pregunta al backend FastAPI
- * y devuelve { answer: string }.
+ * POST /api/chat
+ * Proxy hacia FastAPI. Devuelve { answer } o { error }.
  */
-export async function POST(req: NextRequest) {
-  const { question } = (await req.json()) as { question: string };
-
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const endpoint = process.env.NEXT_PUBLIC_CHAT_ENDPOINT;
+
   if (!endpoint) {
     return NextResponse.json(
-      { error: "NEXT_PUBLIC_CHAT_ENDPOINT missing" },
+      { error: "NEXT_PUBLIC_CHAT_ENDPOINT no configurado." },
       { status: 500 },
     );
   }
 
-  const resp = await fetch(endpoint, {
+  let { question } = (await req.json()) as { question?: string };
+
+  if (!question || typeof question !== "string") {
+    return NextResponse.json(
+      { error: "Falta el campo 'question'." },
+      { status: 400 },
+    );
+  }
+
+  const backendRes = await fetch(endpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ question }),
   });
 
-  if (!resp.ok) {
+  //Si el backend está rate-limited 
+  if (backendRes.status === 503) {
+    const data = await backendRes.json();
+    return NextResponse.json(data, { status: 503 });
+  }
+
+  if (!backendRes.ok) {
+    const detail = await backendRes.text();
     return NextResponse.json(
-      { error: "Backend error", detail: await resp.text() },
+      { error: "Error en el backend", detail },
       { status: 500 },
     );
   }
 
-  const { answer } = (await resp.json()) as { answer: string };
-  return NextResponse.json({ answer });
+  const data = await backendRes.json(); 
+  return NextResponse.json(data);
 }
