@@ -1,29 +1,54 @@
-// src/components/ChatWindow.tsx
-import { Card, CardContent } from "@/components/ui/card";
+"use client";
 
-type Msg = { role: "user" | "assistant"; text: string };
+import React from "react";
+import ChatMessage from "./ChatMessage";
+import { Message } from "@/types/chat";
+
+export interface ChatWindowProps {
+  messages: Message[];
+  isLoading: boolean;
+  /** Ref al elemento final para hacer scroll automático */
+  scrollRef: React.RefObject<HTMLDivElement | null>;
+}
 
 export default function ChatWindow({
   messages,
-  className = "",
-}: {
-  messages: Msg[];
-  className?: string;
-}) {
+  isLoading,
+  scrollRef,
+}: ChatWindowProps) {
   return (
-    <Card className={`w-full overflow-y-auto ${className}`}>
-      <CardContent className="space-y-4 py-4">
-        {messages.map((m, idx) => (
-          <p
-            key={idx}
-            className={
-              m.role === "user" ? "text-right font-medium" : "text-left"
-            }
-          >
-            {m.text}
-          </p>
-        ))}
-      </CardContent>
-    </Card>
+    <div className="h-full overflow-y-auto p-6 space-y-4 scrollbar-thin">
+      {messages.map((msg, idx) => {
+        const prev = messages[idx - 1];
+        const showAvatar = !prev || prev.role !== msg.role;
+        const showTimestamp = showAvatar;
+        return (
+          <ChatMessage
+            key={msg.id}
+            message={msg}
+            showAvatar={showAvatar}
+            showTimestamp={showTimestamp}
+          />
+        );
+      })}
+
+      {isLoading && (
+        <ChatMessage
+          key="__loading__"
+          message={{
+            id: "__loading__",
+            role: "assistant",
+            text: "",
+            createdAt: new Date().toISOString(),
+          }}
+          showAvatar={false}
+          showTimestamp={false}
+          isLoading
+        />
+      )}
+
+      {/* Anchor para scroll */}
+      <div ref={scrollRef} />
+    </div>
   );
 }

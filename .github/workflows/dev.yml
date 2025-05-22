@@ -1,0 +1,40 @@
+name: CI-dev
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_PASSWORD: dummy
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Frontend lint & test
+      - run: |
+          cd frontend
+          npm ci
+          npm run lint
+          npm run test --if-present
+
+      # Backend lint & test
+      - run: |
+          cd backend
+          pip install -r requirements.txt
+          pytest -q
